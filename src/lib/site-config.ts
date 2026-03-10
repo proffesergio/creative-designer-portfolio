@@ -1,0 +1,36 @@
+import { env } from '@/env.mjs';
+
+export const siteConfig = {
+  title: 'Tanvir Tonmoy | Creative Designer',
+  description:
+    "Hello, I'm Tanvir Tonmoy. I am Creative Visual Designer from Bangladesh.",
+  keywords: [
+    'Tanvir Tonmoy',
+    'Front-end developer',
+    'Bangladesh',
+    'Python',
+    'Node JS',
+    'Typescript',
+    'Django',
+    'Git',
+    'React',
+    'Next.js',
+    'Web development',
+    'Front-end',
+    'UI/UX',
+    'Responsive design',
+    'JavaScript',
+    'HTML',
+    'CSS',
+    'Portfolio',
+    'Projects',
+    'Website',
+    'Web applications',
+    'Developer',
+    'Code',
+    'Programming',
+    'Tech enthusiast',
+  ],
+  url: env.SITE_URL || 'https://tanvirvisuals.com',
+  googleSiteVerificationId: env.GOOGLE_SITE_VERIFICATION_ID || '',
+};
