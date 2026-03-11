@@ -6,7 +6,10 @@ import { Pause, Play } from 'lucide-react';
 
 import { VideoModal } from '@/components/video-modal';
 import { motionGraphicsData } from '@/lib/data';
+<<<<<<< HEAD
 import { getVideoUrl } from '@/lib/videoUrl';
+=======
+>>>>>>> 9cba0fa068d3a8bdff89417f6ed57e260f276ae6
 
 interface MotionGraphicProps {
   item: (typeof motionGraphicsData)[number];
@@ -63,7 +66,11 @@ export const MotionGraphic = ({ item, index }: MotionGraphicProps) => {
         <div className="relative h-56 w-full overflow-hidden bg-black">
           <video
             ref={videoRef}
+<<<<<<< HEAD
             src={getVideoUrl(item.video)}
+=======
+            src={item.video}
+>>>>>>> 9cba0fa068d3a8bdff89417f6ed57e260f276ae6
             className="size-full object-cover"
             onEnded={() => setIsPlaying(false)}
             muted
@@ -166,7 +173,11 @@ export const MotionGraphic = ({ item, index }: MotionGraphicProps) => {
       {/* Video Modal */}
       <VideoModal
         isOpen={isModalOpen}
+<<<<<<< HEAD
         videoUrl={getVideoUrl(item.video)}
+=======
+        videoUrl={item.video}
+>>>>>>> 9cba0fa068d3a8bdff89417f6ed57e260f276ae6
         title={item.title}
         onClose={() => setIsModalOpen(false)}
       />

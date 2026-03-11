@@ -47,6 +47,9 @@ sitemap-*.xml
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+<<<<<<< HEAD
 
 # Videos - stored in Cloudflare R2
 public/videos/
+=======
+>>>>>>> 9cba0fa068d3a8bdff89417f6ed57e260f276ae6

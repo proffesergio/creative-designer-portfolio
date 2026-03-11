@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -9,3 +10,15 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+=======
+/** @type {import('next').NextConfig} */                                     
+   const nextConfig = {                                                         
+     output: 'export',                                                          
+     images: {                                                                  
+       unoptimized: true,                                                       
+     },                                                                         
+     trailingSlash: true,                                                       
+   }                                                                            
+                                                                                
+   module.exports = nextConfig  
+>>>>>>> 9cba0fa068d3a8bdff89417f6ed57e260f276ae6
