@@ -1,0 +1,50 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app
+        run: npm run build
+        env:
+          NEXT_PUBLIC_VIDEO_BASE_URL: ${{ secrets.NEXT_PUBLIC_VIDEO_BASE_URL }}
+
+      - name: Create deployment package
+        run: |
+          mkdir -p deploy
+          cp -r .next/standalone deploy/
+          cp -r .next/static deploy/standalone/
+          cp -r public deploy/standalone/
+          cp -r package*.json deploy/standalone/
+          cp -r .env.production deploy/standalone/
+
+      - name: Deploy to cPanel via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.5
+        with:
+          server: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          password: ${{ secrets.CPANEL_PASSWORD }}
+          local-dir: ./deploy/standalone/
+          remote-dir: ${{ secrets.CPANEL_REMOTE_PATH }}
+          timeout: 120000

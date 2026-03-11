@@ -6,7 +6,6 @@ import { Pause, Play } from 'lucide-react';
 
 import { VideoModal } from '@/components/video-modal';
 import { motionGraphicsData } from '@/lib/data';
-import { getVideoUrl } from '@/lib/videoUrl';
 
 interface MotionGraphicProps {
   item: (typeof motionGraphicsData)[number];
@@ -46,7 +45,7 @@ export const MotionGraphic = ({ item, index }: MotionGraphicProps) => {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: 'easeOut',
+        ease: [0.04, 0.62, 0.23, 0.98] as const,
       },
     },
   };
