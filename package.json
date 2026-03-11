@@ -6,10 +6,7 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-<<<<<<< HEAD
-=======
     "export": "next build && next export",
->>>>>>> 9cba0fa068d3a8bdff89417f6ed57e260f276ae6
     "preview": "next build && next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
