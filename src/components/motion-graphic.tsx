@@ -5,8 +5,8 @@ import { motion } from 'framer-motion';
 import { Pause, Play } from 'lucide-react';
 
 import { VideoModal } from '@/components/video-modal';
-import { getVideoUrl } from '@/lib/videoUrl';
 import { motionGraphicsData } from '@/lib/data';
+import { getVideoUrl } from '@/lib/videoUrl';
 
 interface MotionGraphicProps {
   item: (typeof motionGraphicsData)[number];
