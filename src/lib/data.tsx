@@ -796,7 +796,7 @@ export const projectsData = [
 
 export const motionGraphicsData = [
   {
-    video: 'videos/motion/book-promo1.mp4',
+    video: 'motion/book-promo1.mp4',
     title: 'Book Promotional Motion',
     description: 'Book promotion animation for social media',
     category: 'Promo Animation',
@@ -808,7 +808,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/book-promo2.mp4',
+    video: 'motion/book-promo2.mp4',
     title: 'Book Promotional Motion',
     description: 'Book promotion animation for social media',
     category: 'Promo Animation',
@@ -820,7 +820,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/eye-logo-animation.mp4',
+    video: 'motion/eye-logo-animation.mp4',
     title: 'Eye Logo Animation',
     description: 'Dynamic Logo animation',
     category: 'Logo Animation',
@@ -832,7 +832,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/fb-story.mp4',
+    video: 'motion/fb-story.mp4',
     title: 'Facebook Promo Story',
     description: 'Facebook story promotion animation for social media',
     category: 'Promotional Ads',
@@ -844,7 +844,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/gaming-logo-animation.mp4',
+    video: 'motion/gaming-logo-animation.mp4',
     title: 'Gaming Logo Animation',
     description: 'Gaming logo animation video',
     category: 'Logo Animation',
@@ -856,7 +856,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/gif-banner.mp4',
+    video: 'motion/gif-banner.mp4',
     title: 'Gif Banner Animation',
     description: 'Company promotion animation for social media',
     category: 'Promotional Ads',
@@ -868,7 +868,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/gif-banner2.mp4',
+    video: 'motion/gif-banner2.mp4',
     title: 'Gif Banner Animation',
     description: 'Company promotion animation for social media',
     category: 'Promotional Ads',
@@ -880,7 +880,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/intro1.mp4',
+    video: 'motion/intro1.mp4',
     title: 'Short Intro Animation',
     description: 'Short promotional animation for social media',
     category: 'Shorts/Reels',
@@ -892,7 +892,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/trailer.mp4',
+    video: 'motion/trailer.mp4',
     title: 'Short Intro Animation',
     description: 'Short promotional trailer video for social media',
     category: 'Shorts/Reels',
@@ -904,7 +904,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/kinetic-typography.mp4',
+    video: 'motion/kinetic-typography.mp4',
     title: 'Kinetic Typgrahpy Animation',
     description: 'Short promotional animation for social media',
     category: 'Video Editing',
@@ -916,7 +916,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/landscape-2.mp4',
+    video: 'motion/landscape-2.mp4',
     title: 'Landscape Animation',
     description: 'Short landscape promotional animation video',
     category: 'Promotional Ads',
@@ -928,7 +928,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/landscape-animation.mp4',
+    video: 'motion/landscape-animation.mp4',
     title: 'Landscape Animation Video',
     description: 'Short landscape promotional animation video',
     category: 'Promotional Ads',
@@ -940,7 +940,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/lower-third.mp4',
+    video: 'motion/lower-third.mp4',
     title: 'Lower Third Presentation Video',
     description: 'Short promotional lower third presentation for social media',
     category: 'Promotional Ads',
@@ -952,7 +952,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/lyrical-music-video.mp4',
+    video: 'motion/lyrical-music-video.mp4',
     title: 'Lyrical Music Video Animation',
     description: 'Lyrical Music Video Animation',
     category: 'Video Editing',
@@ -964,7 +964,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/mobile-app-ui.mp4',
+    video: 'motion/mobile-app-ui.mp4',
     title: 'Mobile Application UI Animation',
     description: 'Animation video for mobile app user experiences',
     category: 'Promotional Ads',
@@ -976,7 +976,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/motion-promo.mp4',
+    video: 'motion/motion-promo.mp4',
     title: 'Promotional Motion Animation',
     description: 'Promotional Motion Animation Video',
     category: 'Promotional Ads',
@@ -988,7 +988,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/pen-logo-animation.mp4',
+    video: 'motion/pen-logo-animation.mp4',
     title: 'Creative Pen Logo Animation',
     description: 'Logo Promotional Animation Video',
     category: 'Logo Animation',
@@ -1000,7 +1000,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/pharmacy.mp4',
+    video: 'motion/pharmacy.mp4',
     title: 'Promotional Animation of a Pharmacy',
     description: 'Pharmacy Promotional Animation Video',
     category: 'Promotional Ads',
@@ -1012,7 +1012,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/product-promo1.mp4',
+    video: 'motion/product-promo1.mp4',
     title: 'Product Promotional Animation',
     description: 'Product Promotional Animation Video',
     category: 'Promotional Ads',
@@ -1024,7 +1024,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: 'videos/motion/story-2.mp4',
+    video: 'motion/story-2.mp4',
     title: 'Facebook Story Promotional Animation',
     description: 'Facebook Promotional Animation Story',
     category: 'Promotional Ads',
@@ -1036,7 +1036,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/editing/client-rev.mp4',
+    video: 'motion/editing/client-rev.mp4',
     title: 'Client Review',
     description: 'Client Testimonial for a security company',
     category: 'Video Editing',
@@ -1048,7 +1048,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/editing/client-rev2.mp4',
+    video: 'motion/editing/client-rev2.mp4',
     title: 'Client Review',
     description: 'Client Testimonial for a security company',
     category: 'Video Editing',
@@ -1060,7 +1060,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/editing/client-rev3.mp4',
+    video: 'editing/client-rev3.mp4',
     title: 'Client Review',
     description: 'Client Testimonial for a security company',
     category: 'Video Editing',
@@ -1072,7 +1072,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/editing/promo-clip.mp4',
+    video: 'editing/promo-clip.mp4',
     title: 'Promotional Video Clip',
     description: 'Promotional filmy video',
     category: 'Video Editing',
@@ -1084,7 +1084,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/editing/unifly-travels.mp4',
+    video: 'editing/unifly-travels.mp4',
     title: 'Travel Agency Promotional Video',
     description: 'Travel Agency Promotional Video',
     category: 'Video Editing',
@@ -1096,7 +1096,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/motion-1.mp4',
+    video: '/motion-1.mp4',
     title: 'Logo Promotion Animation',
     description: 'Dynamic product promotion animation for social media',
     category: 'Logo Animation',
@@ -1108,7 +1108,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/motion-2.mp4',
+    video: '/motion-2.mp4',
     title: 'Brand Intro Animation',
     description: 'Animated brand introduction with modern effects',
     category: 'Logo Animation',
@@ -1120,7 +1120,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/motion-3.mp4',
+    video: '/motion-3.mp4',
     title: 'Mega City Animation',
     description: 'Smooth user interface animation design',
     category: 'Promotional Ads',
@@ -1132,7 +1132,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/motion-4.mp4',
+    video: '/motion-4.mp4',
     title: 'Fashion Reel Animation',
     description: 'Engaging social media animation reel',
     category: 'Shorts/Reels',
@@ -1144,7 +1144,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/motion-5.mp4',
+    video: '/motion-5.mp4',
     title: 'Logo Animation',
     description: 'Professional logo animation sequence',
     category: 'Logo Animation',
@@ -1156,7 +1156,7 @@ export const motionGraphicsData = [
     },
   },
   {
-    video: '/videos/motion-6.mp4',
+    video: '/motion-6.mp4',
     title: 'Text Animation',
     description: 'Creative text animation with transitions',
     category: 'Video Editing',
