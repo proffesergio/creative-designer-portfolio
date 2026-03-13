@@ -38,13 +38,15 @@ jobs:
 
       - name: Create deploy package
         run: |
-          mkdir -p deploy
-          cp -r .next/standalone deploy/
-          cp -r .next/static deploy/standalone/
+          mkdir -p deploy/standalone
+          cp -r .next/standalone/* deploy/standalone/
+          cp -r .next/static deploy/standalone/.next/
           cp -r public deploy/standalone/
           cp -r package*.json deploy/standalone/
           cp -r .next/server deploy/standalone/
-          cp -r .env.production deploy/standalone/
+          cp -r .env.production deploy/standalone/.env
+          cp -r .next/static/chunks deploy/standalone/.next/
+          cp -r node_modules/.cache deploy/standalone/
           cd deploy
           tar -czf ../deploy.tar.gz .
 
