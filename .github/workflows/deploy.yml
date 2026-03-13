@@ -38,14 +38,15 @@ jobs:
 
       - name: Create deploy package
         run: |
-          mkdir -p deploy/standalone
-          cp -r .next/standalone/* deploy/standalone/
-          cp -r .next/static deploy/standalone/.next/
+          mkdir -p deploy
+          cp -r .next/standalone deploy
+          cp -r .next/static deploy/standalone/
           cp -r public deploy/standalone/
           cp -r package*.json deploy/standalone/
-          cp -r .env.production deploy/standalone/.env
+          cp -r .env.production deploy/standalone/
           cd deploy
           tar -czf ../deploy.tar.gz .
+
 
       - name: Deploy to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
