@@ -1,4 +1,8 @@
-const VIDEO_BASE_URL = process.env.NEXT_PUBLIC_VIDEO_BASE_URL || '/videos/';
+// const VIDEO_BASE_URL = process.env.NEXT_PUBLIC_VIDEO_BASE_URL || '/videos/';
+const VIDEO_BASE_URL = process.env.NEXT_PUBLIC_VIDEO_BASE_URL;
+if (!VIDEO_BASE_URL) {
+  throw new Error('NEXT_PUBLIC_VIDEO_BASE_URL is not set');
+}
 
 export const getVideoUrl = (path: string): string => {
   if (!path) return '';
