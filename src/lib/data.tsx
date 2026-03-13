@@ -809,7 +809,7 @@ export const motionGraphicsData = [
   },
   {
     video: 'motion/book-promo2.mp4',
-    title: 'Book Promotional Motion',
+    title: 'Book Promotional Motion Video',
     description: 'Book promotion animation for social media',
     category: 'Promo Animation',
     technologies: ['After Effects', 'Adobe Premiere Pro'],
