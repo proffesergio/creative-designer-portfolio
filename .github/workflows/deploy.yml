@@ -40,13 +40,10 @@ jobs:
         run: |
           mkdir -p deploy/standalone
           cp -r .next/standalone/* deploy/standalone/
-          cp -r .next/static deploy/standalone/
-          cp -r .next/server deploy/standalone/
+          cp -r .next/static deploy/standalone/.next/
           cp -r public deploy/standalone/
           cp -r package*.json deploy/standalone/
           cp -r .env.production deploy/standalone/.env
-          mkdir -p deploy/standalone/.next/static
-          cp -r .next/static/chunks deploy/standalone/.next/static/
           cd deploy
           tar -czf ../deploy.tar.gz .
 
