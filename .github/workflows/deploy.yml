@@ -46,7 +46,9 @@ jobs:
           cp -r .next/server deploy/standalone/
           cp -r .env.production deploy/standalone/.env
           cp -r .next/static/chunks deploy/standalone/.next/
-          cp -r node_modules/.cache deploy/standalone/
+          if [ -d "node_modules/.cache" ]; then
+            cp -r node_modules/.cache deploy/standalone/
+          fi
           cd deploy
           tar -czf ../deploy.tar.gz .
 
