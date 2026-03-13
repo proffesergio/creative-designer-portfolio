@@ -25,7 +25,7 @@ jobs:
       - name: Verify VIDEO_BASE_URL is set
         run: |
           if [ -z "${{ secrets.VIDEO_BASE_URL }}" ]; then
-            echo "ERROR: VIDEO_BASE_URL secret is not set!"
+            echo "ERROR: VIDEO_BASE_URL secret is not set! Please recheck!"
             exit 1
           fi
           echo "VIDEO_BASE_URL prefix: ${{ secrets.VIDEO_BASE_URL }}"
