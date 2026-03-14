@@ -36,16 +36,36 @@ jobs:
           NODE_ENV: production
           NEXT_PUBLIC_VIDEO_BASE_URL: ${{ secrets.VIDEO_BASE_URL }}
 
+      # - name: Create deploy package
+      #   run: |
+      #     mkdir -p deploy
+      #     cp -r .next/standalone deploy
+      #     cp -r .next/static deploy/standalone/
+      #     cp -r public deploy/standalone/
+      #     cp -r package*.json deploy/standalone/
+      #     cp -r .env.production deploy/standalone/
+      #     cd deploy
+      #     tar -czf ../deploy.tar.gz .
       - name: Create deploy package
         run: |
-          mkdir -p deploy
-          cp -r .next/standalone deploy
-          cp -r .next/static deploy/standalone/
+          # 1. Clean and create structure
+          rm -rf deploy && mkdir -p deploy/standalone/.next
+          
+          # 2. Copy the standalone engine (includes server.js and node_modules)
+          cp -r .next/standalone/* deploy/standalone/
+          
+          # 3. Copy static files into .next subfolder (Fixes layout)
+          cp -r .next/static deploy/standalone/.next/
+          
+          # 4. Copy CRITICAL metadata (Fixes Server Action / workers error)
+          # These files tell Next.js which Server Actions exist in this build
+          cp .next/BUILD_ID deploy/standalone/.next/
+          cp .next/server-reference-manifest.json deploy/standalone/.next/ || echo "No manifest found"
+          
+          # 5. Copy public assets and environment
           cp -r public deploy/standalone/
-          cp -r package*.json deploy/standalone/
-          cp -r .env.production deploy/standalone/
-          cd deploy
-          tar -czf ../deploy.tar.gz .
+          [ -f .env.production ] && cp .env.production deploy/standalone/.env
+      
 
 
       - name: Deploy to cPanel via FTP
