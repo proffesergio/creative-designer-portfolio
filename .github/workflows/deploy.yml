@@ -49,23 +49,22 @@ jobs:
       #     tar -czf ../deploy.tar.gz .
       - name: Create deploy package
         run: |
-          # Create a clean folder structure
-          mkdir -p deploy/standalone/.next
+          # 1. Start fresh
+          rm -rf deploy && mkdir -p deploy/standalone/.next
           
-          # Copy everything from standalone (including its internal node_modules)
+          # 2. Copy the standalone engine (server.js, node_modules, etc)
           cp -r .next/standalone/* deploy/standalone/
           
-          # Fix: Specifically copy the new node_modules to ensure they are updated
-          cp -r .next/standalone/node_modules deploy/standalone/
-          
-          # Copy static and critical build manifests
-          cp -r .next/static deploy/standalone/.next/
+          # 3. Copy ALL build manifests (Fixes ENOENT: routes-manifest.json)
+          # These are required for the server to know how to route requests
+          cp .next/*.json deploy/standalone/.next/
           cp .next/BUILD_ID deploy/standalone/.next/
-          cp .next/server-reference-manifest.json deploy/standalone/.next/ || echo "No manifest"
           
-          # Assets and Env
+          # 4. Copy static files into the .next subfolder (Fixes CSS/JS layout)
+          cp -r .next/static deploy/standalone/.next/
+          
+          # 5. Copy public assets and config
           cp -r public deploy/standalone/
-          cp package.json deploy/standalone/
           [ -f .env.production ] && cp .env.production deploy/standalone/.env
 
       - name: Deploy to cPanel via FTP
