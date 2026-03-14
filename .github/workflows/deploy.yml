@@ -1,4 +1,4 @@
-name: Deploy to cPanel (Custom Server)
+name: Deploy to cPanel
 
 on:
   push:
@@ -33,29 +33,23 @@ jobs:
           echo "VIDEO_BASE_URL prefix: ${{ secrets.VIDEO_BASE_URL }}"
 
       - name: Build Next.js app
-        run: npm run build        
+        run: npm run build
         env:
-          NODE_ENV: production          
+          NODE_ENV: production
           NEXT_PUBLIC_VIDEO_BASE_URL: ${{ secrets.VIDEO_BASE_URL }}
           NEXT_SERVER_ACTIONS_ENCRYPTION_KEY: ${{ secrets.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY }}
-
-      - name: Prune node_modules to production only (critical step!)
-        run: npm prune --production
 
       - name: Prepare deployment package
         run: |
           mkdir -p deploy
-          # Copy built Next.js app          cp -r .next deploy/
+          cp -r .next deploy/
           cp -r public deploy/
-          # Copy PRUNED production node_modules (this fixes your error!)
           cp -r node_modules deploy/
-          # Copy your custom server.js
-          cp server.js deploy/
-          # Copy package.json (optional but harmless)
           cp package.json deploy/
-          # Copy environment file for your custom server (if using dotenv)
-          [ -f .env.production ] && cp .env.production deploy/.env
-          [ -f .env ] && cp .env deploy/.env
+          cp package-lock.json deploy/
+          echo "NODE_ENV=production" > deploy/.env
+          echo "NEXT_PUBLIC_VIDEO_BASE_URL=${{ secrets.VIDEO_BASE_URL }}" >> deploy/.env
+          echo "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=${{ secrets.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY }}" >> deploy/.env
 
       - name: Deploy to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
