@@ -35,6 +35,7 @@ jobs:
         env:
           NODE_ENV: production
           NEXT_PUBLIC_VIDEO_BASE_URL: ${{ secrets.VIDEO_BASE_URL }}
+          NEXT_SERVER_ACTIONS_ENCRYPTION_KEY: ${{ secrets.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY }}
 
       # - name: Create deploy package
       #   run: |
@@ -48,25 +49,24 @@ jobs:
       #     tar -czf ../deploy.tar.gz .
       - name: Create deploy package
         run: |
-          # 1. Clean and create structure
-          rm -rf deploy && mkdir -p deploy/standalone/.next
+          # Create a clean folder structure
+          mkdir -p deploy/standalone/.next
           
-          # 2. Copy the standalone engine (includes server.js and node_modules)
+          # Copy everything from standalone (including its internal node_modules)
           cp -r .next/standalone/* deploy/standalone/
           
-          # 3. Copy static files into .next subfolder (Fixes layout)
+          # Fix: Specifically copy the new node_modules to ensure they are updated
+          cp -r .next/standalone/node_modules deploy/standalone/
+          
+          # Copy static and critical build manifests
           cp -r .next/static deploy/standalone/.next/
-          
-          # 4. Copy CRITICAL metadata (Fixes Server Action / workers error)
-          # These files tell Next.js which Server Actions exist in this build
           cp .next/BUILD_ID deploy/standalone/.next/
-          cp .next/server-reference-manifest.json deploy/standalone/.next/ || echo "No manifest found"
+          cp .next/server-reference-manifest.json deploy/standalone/.next/ || echo "No manifest"
           
-          # 5. Copy public assets and environment
+          # Assets and Env
           cp -r public deploy/standalone/
+          cp package.json deploy/standalone/
           [ -f .env.production ] && cp .env.production deploy/standalone/.env
-      
-
 
       - name: Deploy to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
