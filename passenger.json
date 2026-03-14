@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "deployer": {
+    "type": "github_actions",
+    "version": "1.0"
+  },
+  "framework": {
+    "name": "node",
+    "version": "18"
+  },
+  "runtime": {
+    "type": "node",
+    "version": "18"
+  },
+  "application": {
+    "type": "node",
+    "node_version": "18",
+    "working_directory": "/home/hossain/domains/tanvirvisuals.com/public_html/portfolio",
+    "entry_point": "server.js",
+    "default_env": "production"
+  },
+  "process": {
+    "type": "web",
+    "concurrency": 1,
+    "min_instances": 1,
+    "max_instances": 3
+  },
+  "health_check": {
+    "path": "/api/health"
+  }
+}

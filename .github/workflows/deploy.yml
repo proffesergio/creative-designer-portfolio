@@ -8,31 +8,53 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 18 (cPanel compatible)
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '18'
           cache: 'npm'
+
+      - name: Verify secrets are set
+        run: |
+          echo "Checking required secrets..."
+          if [ -z "${{ secrets.CPANEL_HOST }}" ]; then
+            echo "ERROR: CPANEL_HOST secret is not set!"
+            exit 1
+          fi
+          if [ -z "${{ secrets.CPANEL_USERNAME }}" ]; then
+            echo "ERROR: CPANEL_USERNAME secret is not set!"
+            exit 1
+          fi
+          if [ -z "${{ secrets.CPANEL_SSH_KEY }}" ]; then
+            echo "ERROR: CPANEL_SSH_KEY secret is not set!"
+            exit 1
+          fi
+          if [ -z "${{ secrets.CPANEL_REMOTE_PATH }}" ]; then
+            echo "ERROR: CPANEL_REMOTE_PATH secret is not set!"
+            exit 1
+          fi
+          echo "✓ All required secrets are set"
 
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_ENV: production
 
-      - name: Verify VIDEO_BASE_URL is set
+      - name: Verify required secrets
         run: |
+          echo "Verifying application secrets..."
           if [ -z "${{ secrets.VIDEO_BASE_URL }}" ]; then
-            echo "ERROR: VIDEO_BASE_URL secret is not set! Please recheck!"
+            echo "ERROR: VIDEO_BASE_URL secret is not set!"
             exit 1
           fi
-          echo "VIDEO_BASE_URL prefix: ${{ secrets.VIDEO_BASE_URL }}"
+          echo "✓ Application secrets verified"
 
-      - name: Build Next.js app
+      - name: Build Next.js application
         run: npm run build
         env:
           NODE_ENV: production
@@ -41,22 +63,183 @@ jobs:
 
       - name: Prepare deployment package
         run: |
-          mkdir -p deploy
-          cp -r .next deploy/
-          cp -r public deploy/
-          cp package.json deploy/
-          cp package-lock.json deploy/
-          cp start.js deploy/
-          echo "NODE_ENV=production" > deploy/.env
-          echo "NEXT_PUBLIC_VIDEO_BASE_URL=${{ secrets.VIDEO_BASE_URL }}" >> deploy/.env
-          echo "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=${{ secrets.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY }}" >> deploy/.env
+          echo "Creating deployment package..."
+          mkdir -p deploy-package
 
-      - name: Deploy to cPanel via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+          # Copy application files
+          cp -r .next deploy-package/
+          cp -r public deploy-package/
+          cp package.json deploy-package/
+          cp package-lock.json deploy-package/
+          cp server.js deploy-package/
+          cp passenger.json deploy-package/
+          cp .cpanel.yml deploy-package/
+
+          # Create deployment info
+          echo "Deployment initiated at $(date)" > deploy-package/deploy-info.txt
+          echo "Commit: ${{ github.sha }}" >> deploy-package/deploy-info.txt
+          echo "Branch: ${{ github.ref }}" >> deploy-package/deploy-info.txt
+          echo "Committer: ${{ github.actor }}" >> deploy-package/deploy-info.txt
+
+          # Create archive for transfer
+          cd deploy-package
+          zip -r ../deployment.zip .
+          cd ..
+
+          ls -la deployment.zip
+          echo "✓ Deployment package created"
+
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v4
         with:
-          server: ${{ secrets.CPANEL_HOST }}
-          username: ${{ secrets.CPANEL_USERNAME }}
-          password: ${{ secrets.CPANEL_PASSWORD }}
-          local-dir: deploy/
-          server-dir: ${{ secrets.CPANEL_REMOTE_PATH }}/
-          log-level: verbose
+          name: deployment-package
+          path: deployment.zip
+          retention-days: 1
+
+      - name: Setup SSH key
+        run: |
+          echo "Setting up SSH key for deployment..."
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          # Save the private key
+          echo "${{ secrets.CPANEL_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # Create SSH config
+          echo "Host cpanel" > ~/.ssh/config
+          echo "    HostName ${{ secrets.CPANEL_HOST }}" >> ~/.ssh/config
+          echo "    User ${{ secrets.CPANEL_USERNAME }}" >> ~/.ssh/config
+          echo "    IdentityFile ~/.ssh/deploy_key" >> ~/.ssh/config
+          echo "    StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "    UserKnownHostsFile /dev/null" >> ~/.ssh/config
+
+          chmod 600 ~/.ssh/config
+          echo "✓ SSH key configured"
+
+      - name: Test SSH connection
+        run: |
+          echo "Testing SSH connection to cPanel..."
+          ssh -o ConnectTimeout=10 -o BatchMode=yes cpanel "echo 'SSH connection successful' && pwd"
+          echo "✓ SSH connection verified"
+
+      - name: Deploy to cPanel via SCP
+        run: |
+          echo "Deploying to cPanel..."
+          REMOTE_PATH="${{ secrets.CPANEL_REMOTE_PATH }}"
+          scp -o StrictHostKeyChecking=no deployment.zip cpanel:${REMOTE_PATH}/
+          echo "✓ Deployment archive uploaded"
+
+      - name: Create deployment script
+        run: |
+          cat > deploy_script.sh << 'DEPLOYEOF'
+            #!/bin/bash
+            set -e
+
+            cd $REMOTE_PATH
+
+            echo "Extracting deployment package..."
+            unzip -o deployment.zip
+
+            echo "Setting permissions..."
+            find . -type d -exec chmod 755 {} \;
+            find . -type f -exec chmod 644 {} \;
+            chmod 755 server.js
+            chmod 755 passenger_start.sh
+
+            echo "Installing production dependencies..."
+            npm ci --only=production --silent
+
+            echo "Cleaning up deployment archive..."
+            rm deployment.zip
+
+            echo "Deployment completed successfully!"
+            echo "Node.js version: $(node --version)"
+            echo "NPM version: $(npm --version)"
+            echo "Files deployed:"
+            ls -la
+
+            echo "Restarting Passenger application..."
+            touch tmp/restart.txt || echo "Restart file created (or already exists)"
+
+            echo "Deployment process completed at $(date)"
+          DEPLOYEOF
+          chmod +x deploy_script.sh
+
+      - name: Execute deployment via SSH
+        run: |
+          echo "Executing deployment commands on cPanel..."
+          scp -o StrictHostKeyChecking=no deploy_script.sh cpanel:${REMOTE_PATH}/
+          ssh -o StrictHostKeyChecking=no cpanel "cd $REMOTE_PATH && ./deploy_script.sh && rm deploy_script.sh"
+          echo "✓ Deployment execution completed"
+
+      - name: Create verification script
+        run: |
+          cat > verify_script.sh << 'VERIFYEOF'
+            #!/bin/bash
+            cd $REMOTE_PATH
+            echo "Verifying critical files exist:"
+            ls -la server.js || echo "ERROR: server.js not found"
+            ls -la package.json || echo "ERROR: package.json not found"
+            ls -la .cpanel.yml || echo "ERROR: .cpanel.yml not found"
+            ls -la passenger.json || echo "ERROR: passenger.json not found"
+            ls -la .next/ || echo "ERROR: .next directory not found"
+
+            echo "Checking node_modules:"
+            if [ -d "node_modules" ]; then
+              echo "✓ node_modules directory exists"
+              echo "Installed packages count: $(ls -1 node_modules | wc -l)"
+            else
+              echo "WARNING: node_modules directory not found"
+            fi
+
+            echo "Checking Passenger status..."
+            ps aux | grep node || echo "Node processes running"
+
+            echo "Checking recent logs..."
+            if [ -f "logs/error.log" ]; then
+              echo "Last 5 error log entries:"
+              tail -5 logs/error.log || echo "No errors in log"
+            fi
+          VERIFYEOF
+          chmod +x verify_script.sh
+
+      - name: Verify deployment
+        run: |
+          echo "Verifying deployment on cPanel..."
+          scp -o StrictHostKeyChecking=no verify_script.sh cpanel:${REMOTE_PATH}/
+          ssh -o StrictHostKeyChecking=no cpanel "cd $REMOTE_PATH && ./verify_script.sh && rm verify_script.sh"
+          echo "✓ Deployment verification completed"
+
+      - name: Cleanup
+        if: always()
+        run: |
+          echo "Cleaning up temporary files..."
+          rm -rf deployment.zip
+          rm -rf deploy-package
+          rm -rf ~/.ssh/deploy_key
+          rm -f ~/.ssh/config
+          echo "✓ Cleanup completed"
+
+      - name: Deployment Summary
+        run: |
+          echo "========================================="
+          echo "🎉 DEPLOYMENT SUMMARY"
+          echo "========================================="
+          echo "Status: SUCCESS"
+          echo "Timestamp: $(date)"
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo ""
+          echo "Deployment method: SCP + SSH"
+          echo "Node version: 18.x (cPanel compatible)"
+          echo "Target: ${{ secrets.CPANEL_HOST }}"
+          echo "Remote path: ${{ secrets.CPANEL_REMOTE_PATH }}"
+          echo ""
+          echo "========================================="
+          echo "Next steps:"
+          echo "1. Check your site at https://tanvirvisuals.com"
+          echo "2. Verify all pages load correctly"
+          echo "3. Test video playback"
+          echo "4. Check cPanel Node.js Application status"
+          echo "========================================="

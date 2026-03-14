@@ -1,0 +1,31 @@
+# cPanel Deployment Configuration
+# This file automates deployment tasks after Git push
+
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/hossain/domains/tanvirvisuals.com/public_html/portfolio/
+
+    # Ensure we're in the correct directory
+    - cd /home/hossain/domains/tanvirvisuals.com/public_html/portfolio/
+
+    # Install production dependencies if package.json changed
+    - if [ -f "package.json" ]; then npm ci --only=production; fi
+
+    # Build Next.js application
+    - npm run build
+
+    # Set proper permissions
+    - find . -type d -exec chmod 755 {} \;
+    - find . -type f -exec chmod 644 {} \;
+
+    # Ensure node_modules has proper permissions
+    - if [ -d "node_modules" ]; then chmod -R 755 node_modules; fi
+
+    # Restart Passenger if running
+    - touch tmp/restart.txt
+
+  # Post-deployment hooks
+  hooks:
+    post_deploy:
+      - echo "Deployment completed successfully at $(date)"
+      - echo "Next.js app deployed to cPanel Node.js Application"
