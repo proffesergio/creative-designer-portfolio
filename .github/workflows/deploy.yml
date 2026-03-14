@@ -49,25 +49,25 @@ jobs:
       #     tar -czf ../deploy.tar.gz .
       - name: Create deploy package
         run: |
-          # 1. Setup clean directory structure
+          # 1. Clean start
           rm -rf deploy && mkdir -p deploy/standalone/.next
           
-          # 2. Copy the standalone engine files to the root of our deploy folder
-          # This includes server.js
+          # 2. Copy the standalone server.js and other files
           cp -r .next/standalone/* deploy/standalone/
           
-          # 3. CRITICAL: Copy the standalone node_modules to the root
-          # Next.js standalone puts them here: .next/standalone/node_modules
-          # We need them at: deploy/standalone/node_modules
-          cp -r .next/standalone/node_modules deploy/standalone/ || echo "node_modules already in place"
+          # 3. FIX: Explicitly copy the node_modules folder
+          # It's often located at .next/standalone/node_modules
+          cp -r .next/standalone/node_modules deploy/standalone/ || echo "node_modules move failed, checking path..."
           
-          # 4. Copy all manifests and static files (Fixes layout and ENOENT errors)
+          # 4. Copy all manifests (Fixes the ENOENT errors)
           cp .next/*.json deploy/standalone/.next/
           cp .next/BUILD_ID deploy/standalone/.next/
-          cp -r .next/static deploy/standalone/.next/
           
-          # 5. Copy public assets and environment
+          # 5. Copy static and public assets (Fixes the layout)
+          cp -r .next/static deploy/standalone/.next/
           cp -r public deploy/standalone/
+          
+          # 6. Final config files
           [ -f .env.production ] && cp .env.production deploy/standalone/.env
           cp package.json deploy/standalone/
 
