@@ -47,6 +47,7 @@ jobs:
           cp -r node_modules deploy/
           cp package.json deploy/
           cp package-lock.json deploy/
+          cp start.js deploy/
           echo "NODE_ENV=production" > deploy/.env
           echo "NEXT_PUBLIC_VIDEO_BASE_URL=${{ secrets.VIDEO_BASE_URL }}" >> deploy/.env
           echo "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=${{ secrets.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY }}" >> deploy/.env
